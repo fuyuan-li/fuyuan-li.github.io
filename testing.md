@@ -6,7 +6,7 @@ permalink: /testing/
 ---
 <div id="to-top" class="text-center border-top border-bottom mb-3 mb-md-5">
   <div class="alt-h3 py-3 py-md-5">
-    <label for="filter" class="sr-only">Search for civic hackers or research lists</label>
+    <label for="filter" class="sr-only">This is a search bar: </label>
     <input id="filter" type="text" class="" placeholder="Type to search...">
   </div>
 </div>
