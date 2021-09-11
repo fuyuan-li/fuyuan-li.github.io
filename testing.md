@@ -27,7 +27,8 @@ permalink: /testing/
   <option value="country">Townhouse in the country</option>
 </select>
 
-<select name="course" id="Which course you enjoy the most:">
+<label for="course">Which course you enjoy the most:</label>
+<select name="course_name" id="course">
   <option value="art">Art</option>
   <option value="math">Math</option>
   <option value="history">History</option>
