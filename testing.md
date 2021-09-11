@@ -16,15 +16,16 @@ permalink: /testing/
 <select name="color_name" id="color">
   <option value="r">Red</option>
   <option value="b">Blue</option>
-  <option value="g">Green</option>
-  <option value="y">Yello</option>
+  <option value="g">Golden</option>
+  <option value="y">Black</option>
 </select>
 
-<label for="place">Where do you want to live:</label>
+<label for="place">Where would you go for relax:</label>
 <select name="place_name" id="place">
-  <option value="city">Busy City</option>
-  <option value="sea">House by the beach</option>
-  <option value="country">Townhouse in the country</option>
+  <option value="shopping">Shopping mall</option>
+  <option value="beach">Beach</option>
+  <option value="movie">Movie</option>
+  <option value="book">Reading book</option>
 </select>
 
 <label for="course">Which course you enjoy the most:</label>
@@ -36,3 +37,6 @@ permalink: /testing/
   <option value="music">Music</option>
   <option value="lit">Lit</option>
 </select>
+
+<button type="button">Analyze</button>
+
