@@ -12,23 +12,26 @@ permalink: /testing/
 </div>
 
 
-<select name="cars1" id="cars">
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
+<label for="color">Which color do you like the most:</label>
+<select name="color_name" id="color">
+  <option value="r">Red</option>
+  <option value="b">Blue</option>
+  <option value="g">Green</option>
+  <option value="y">Yello</option>
 </select>
 
-<select name="cars2" id="cars">
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
+<label for="place">Where do you want to live:</label>
+<select name="place_name" id="place">
+  <option value="city">Busy City</option>
+  <option value="sea">House by the beach</option>
+  <option value="country">Townhouse in the country</option>
 </select>
 
-<select name="cars3" id="cars">
-  <option value="volvo">Volvo</option>
-  <option value="saab">Saab</option>
-  <option value="mercedes">Mercedes</option>
-  <option value="audi">Audi</option>
+<select name="course" id="Which course you enjoy the most:">
+  <option value="art">Art</option>
+  <option value="math">Math</option>
+  <option value="history">History</option>
+  <option value="pe">P.E.</option>
+  <option value="music">Music</option>
+  <option value="lit">Lit</option>
 </select>
