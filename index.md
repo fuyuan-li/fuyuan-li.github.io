@@ -15,7 +15,7 @@ permalink: /
 <div class="container-lg p-responsive">
   <div class="Box clearfix p-4 p-sm-5 col-md-7 mx-auto mt-6">
     <div class="float-left">
-      <img class="d-block pr-4" style="width: 80px;" alt="FedRAMP Logo" src="{{"/assets/img/Fedramp-logo.svg" | relative_url}}">
+      <img class="d-block pr-4" style="width: 80px;" alt="FedRAMP Logo" src="{{"/assets/img/logo.jpeg" | relative_url}}">
     </div>
     <div class="overflow-hidden">
       <p>GitHub is now Federal Risk and Authorization Management Program (FedRAMP) authorized.
