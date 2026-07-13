@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  /* Geek palette — day mode, white-based, each project brings its own color */
+  --geek-bg: #ffffff;
+  --geek-bg-raised: #fafafa;
+  --geek-fg: #14171a;
+  --geek-accent: #14171a;
+  --geek-accent-dim: #d8dbdd;
+  --geek-line: #e6e8ea;
+
+  /* Rock palette — night mode, black-based */
+  --rock-bg: #060606;
+  --rock-bg-raised: #151212;
+  --rock-fg: #f3e9db;
+  --rock-accent: #ff5b3c;
+  --rock-accent-2: #ffb703;
+  --rock-line: #2a2222;
+}
+
+@theme inline {
+  --font-mono: var(--font-geek-mono);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-rock-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+::selection {
+  background: #ffe999;
+  color: #14171a;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
