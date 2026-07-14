@@ -8,6 +8,7 @@ export default function ProjectCard({
   title,
   tagline,
   highlights,
+  actions,
   theme,
   accent,
   children,
@@ -17,6 +18,7 @@ export default function ProjectCard({
   title: string;
   tagline: string;
   highlights?: ReactNode[];
+  actions?: ReactNode;
   theme: "geek" | "rock";
   accent?: string;
   children: ReactNode;
@@ -38,10 +40,11 @@ export default function ProjectCard({
       className="rounded-2xl border p-6 sm:p-8 flex flex-col gap-6"
       style={style}
     >
-      <header className="flex flex-col gap-2">
-        {icon && !isRock && <span className="text-5xl">{icon}</span>}
+      <header className="relative flex flex-col">
+        {actions ? <div className="absolute right-0 top-0">{actions}</div> : null}
+        {icon && !isRock && <span className="mb-3 text-5xl leading-none">{icon}</span>}
         <span
-          className="font-mono text-xs uppercase tracking-[0.25em] opacity-60"
+          className="font-mono text-[11px] font-medium uppercase leading-4 tracking-[0.25em] opacity-60"
           style={accent && !isRock ? { color: accent } : undefined}
         >
           {eyebrow}
@@ -49,22 +52,24 @@ export default function ProjectCard({
         <h3
           className={
             isRock
-              ? "font-display text-4xl tracking-wide"
-              : "font-mono text-3xl"
+              ? "font-display mt-1.5 text-4xl leading-[1.15] tracking-wide"
+              : "font-mono mt-1.5 text-3xl font-semibold leading-[1.15]"
           }
         >
           {title}
         </h3>
-        <p className="text-base opacity-70 max-w-prose">{tagline}</p>
+        <p className="mt-3 max-w-prose text-base leading-[1.55] opacity-70">
+          {tagline}
+        </p>
         {highlights && highlights.length > 0 && (
-          <ul className="mt-1 flex flex-col gap-1.5">
+          <ul className="mt-4 flex flex-col gap-2.5">
             {highlights.map((h, i) => (
               <li
                 key={i}
-                className="flex items-start gap-2 text-sm opacity-80"
+                className="flex items-start gap-2.5 text-sm leading-[1.6] opacity-80"
               >
                 <span
-                  className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                  className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{ background: accent ?? "currentColor" }}
                 />
                 {h}
@@ -73,7 +78,7 @@ export default function ProjectCard({
           </ul>
         )}
       </header>
-      <div>{children}</div>
+      <div className="mt-1">{children}</div>
     </section>
   );
 }

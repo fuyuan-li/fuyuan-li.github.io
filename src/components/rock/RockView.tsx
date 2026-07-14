@@ -25,7 +25,29 @@ export default function RockView() {
       <ProjectCard
         eyebrow="stagev1"
         title="setlist, swiped"
-        tagline="Built this so the band could pick a setlist without a 40-message group chat. Swipe right to add a song."
+        tagline="I mostly hit drums. Occasionally, I hit a keyboard — usually when the band needs something. StageV1 turns rehearsal song-picking from a 40-message group chat into a Tinder-ish swipe: pass, waitlist, or join. Everyone gets a vote; the group chat gets the night off."
+        actions={
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em]">
+            <span
+              className="rounded-full px-2.5 py-1"
+              style={{
+                background: "var(--rock-accent)",
+                color: "var(--rock-bg)",
+              }}
+            >
+              demo
+            </span>
+            <a
+              href="https://github.com/fuyuan-li/stagev1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border px-2.5 py-1 opacity-70 transition-opacity hover:opacity-100"
+              style={{ borderColor: "var(--rock-line)" }}
+            >
+              GitHub ↗
+            </a>
+          </div>
+        }
         theme="rock"
       >
         <StageV1SwipeDemo />

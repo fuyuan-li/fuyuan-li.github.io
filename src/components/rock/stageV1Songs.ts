@@ -1,0 +1,58 @@
+export type StageSong = {
+  title: string;
+  artist: string;
+  album: string;
+  cover: string;
+};
+
+// Real release artwork returned by Deezer's public catalogue search.
+export const STAGE_SONGS: readonly StageSong[] = [
+  { title: "Everlong", artist: "Foo Fighters", album: "The Colour and the Shape", cover: "https://cdn-images.dzcdn.net/images/cover/b60f3a75fb0eac77786603a940657164/500x500-000000-80-0-0.jpg" },
+  { title: "Chop Suey!", artist: "System of a Down", album: "Toxicity", cover: "https://cdn-images.dzcdn.net/images/cover/6baa3ad626e859f67bbddae6528fd949/500x500-000000-80-0-0.jpg" },
+  { title: "Sultans of Swing", artist: "Dire Straits", album: "Sultans of Swing — The Very Best of Dire Straits", cover: "https://cdn-images.dzcdn.net/images/cover/38b20806fe42f44253eccb0cdec2dbc3/500x500-000000-80-0-0.jpg" },
+  { title: "Du Hast", artist: "Rammstein", album: "Sehnsucht", cover: "https://cdn-images.dzcdn.net/images/cover/e24ae59ad933185bd6689d388eb0f256/500x500-000000-80-0-0.jpg" },
+  { title: "No One Knows", artist: "Queens of the Stone Age", album: "Songs for the Deaf", cover: "https://cdn-images.dzcdn.net/images/cover/baed22f6786e84358eac16d5a29588bb/500x500-000000-80-0-0.jpg" },
+  { title: "Smells Like Teen Spirit", artist: "Nirvana", album: "Nevermind", cover: "https://cdn-images.dzcdn.net/images/cover/fb71ce45bc9d3f2cb53977cf18d43b0a/500x500-000000-80-0-0.jpg" },
+  { title: "Sweet Child O' Mine", artist: "Guns N' Roses", album: "Appetite for Destruction", cover: "https://cdn-images.dzcdn.net/images/cover/8bfe7b3b0985d9ff0751090fb2b6f73f/500x500-000000-80-0-0.jpg" },
+  { title: "Back in Black", artist: "AC/DC", album: "Back in Black", cover: "https://cdn-images.dzcdn.net/images/cover/41041b14873956eff0459c8ea2c296a8/500x500-000000-80-0-0.jpg" },
+  { title: "Bohemian Rhapsody", artist: "Queen", album: "A Night at the Opera", cover: "https://cdn-images.dzcdn.net/images/cover/d91cdba54c5f37584f43a230031617f3/500x500-000000-80-0-0.jpg" },
+  { title: "Under Pressure", artist: "Queen & David Bowie", album: "Bohemian Rhapsody", cover: "https://cdn-images.dzcdn.net/images/cover/8b8fc5d117f9357b79f0a0a410a170e8/500x500-000000-80-0-0.jpg" },
+  { title: "Hotel California", artist: "Eagles", album: "Hotel California", cover: "https://cdn-images.dzcdn.net/images/cover/7a6c7b49cfdaf4ee233f66c3070d2f40/500x500-000000-80-0-0.jpg" },
+  { title: "Dream On", artist: "Aerosmith", album: "Aerosmith", cover: "https://cdn-images.dzcdn.net/images/cover/782b30e5bff281636636b17ea8d403d0/500x500-000000-80-0-0.jpg" },
+  { title: "Paint It, Black", artist: "The Rolling Stones", album: "Big Hits", cover: "https://cdn-images.dzcdn.net/images/cover/3aed94e2a791cd0f1a3ec5c306f65e9e/500x500-000000-80-0-0.jpg" },
+  { title: "Paranoid", artist: "Black Sabbath", album: "Paranoid", cover: "https://cdn-images.dzcdn.net/images/cover/2f1deaf107596e4125e6525570eb969d/500x500-000000-80-0-0.jpg" },
+  { title: "Whole Lotta Love", artist: "Led Zeppelin", album: "Led Zeppelin II", cover: "https://cdn-images.dzcdn.net/images/cover/a5fdd04471cb7d6ec8a663621bdd9bee/500x500-000000-80-0-0.jpg" },
+  { title: "Baba O'Riley", artist: "The Who", album: "Who's Next", cover: "https://cdn-images.dzcdn.net/images/cover/077c3e89663134e653f97a6e85be7662/500x500-000000-80-0-0.jpg" },
+  { title: "Another Brick in the Wall, Pt. 2", artist: "Pink Floyd", album: "The Wall", cover: "https://cdn-images.dzcdn.net/images/cover/2bea643b92a8fc6b19a23756f718cbd4/500x500-000000-80-0-0.jpg" },
+  { title: "Kashmir", artist: "Led Zeppelin", album: "Physical Graffiti", cover: "https://cdn-images.dzcdn.net/images/cover/b856ee1b505a82b9c8a762eaa2f8f064/500x500-000000-80-0-0.jpg" },
+  { title: "All Along the Watchtower", artist: "Jimi Hendrix", album: "Electric Ladyland", cover: "https://cdn-images.dzcdn.net/images/cover/b3970b660be133549157849c2a2afa17/500x500-000000-80-0-0.jpg" },
+  { title: "Purple Haze", artist: "Jimi Hendrix", album: "Are You Experienced", cover: "https://cdn-images.dzcdn.net/images/cover/b83888148da4c3978b9c3870d8cb3166/500x500-000000-80-0-0.jpg" },
+  { title: "Barracuda", artist: "Heart", album: "Little Queen", cover: "https://cdn-images.dzcdn.net/images/cover/7847bea7221d7572dab879611f710ecd/500x500-000000-80-0-0.jpg" },
+  { title: "The Chain", artist: "Fleetwood Mac", album: "Rumours", cover: "https://cdn-images.dzcdn.net/images/cover/9732751ce91d786dcf30069853697078/500x500-000000-80-0-0.jpg" },
+  { title: "Go Your Own Way", artist: "Fleetwood Mac", album: "Rumours", cover: "https://cdn-images.dzcdn.net/images/cover/9732751ce91d786dcf30069853697078/500x500-000000-80-0-0.jpg" },
+  { title: "Free Fallin'", artist: "Tom Petty", album: "Full Moon Fever", cover: "https://cdn-images.dzcdn.net/images/cover/6e9c12e4095a8642b8d5ccfa25087e4b/500x500-000000-80-0-0.jpg" },
+  { title: "American Girl", artist: "Tom Petty and the Heartbreakers", album: "Tom Petty and the Heartbreakers", cover: "https://cdn-images.dzcdn.net/images/cover/6cae8557c862a9137af4f4a56d9ee082/500x500-000000-80-0-0.jpg" },
+  { title: "Should I Stay or Should I Go", artist: "The Clash", album: "Combat Rock", cover: "https://cdn-images.dzcdn.net/images/cover/dcb57e195538467662fbce4492f89c20/500x500-000000-80-0-0.jpg" },
+  { title: "London Calling", artist: "The Clash", album: "London Calling", cover: "https://cdn-images.dzcdn.net/images/cover/1dbb7d7bee08ed2b18deabffd675bd36/500x500-000000-80-0-0.jpg" },
+  { title: "Song 2", artist: "Blur", album: "Blur: The Best Of", cover: "https://cdn-images.dzcdn.net/images/cover/1e6f6130ca0ccbdd0cde4dc2b05e6df9/500x500-000000-80-0-0.jpg" },
+  { title: "Creep", artist: "Radiohead", album: "Pablo Honey", cover: "https://cdn-images.dzcdn.net/images/cover/1dd56fd8824492e1a5106c99a00a85ec/500x500-000000-80-0-0.jpg" },
+  { title: "Karma Police", artist: "Radiohead", album: "OK Computer", cover: "https://cdn-images.dzcdn.net/images/cover/05a186e0a859a36f9cd51cdae2158fe1/500x500-000000-80-0-0.jpg" },
+  { title: "Mr. Brightside", artist: "The Killers", album: "Hot Fuss", cover: "https://cdn-images.dzcdn.net/images/cover/8d9fdd5ce1f7e5a4a3774697df0347f3/500x500-000000-80-0-0.jpg" },
+  { title: "Seven Nation Army", artist: "The White Stripes", album: "Elephant", cover: "https://cdn-images.dzcdn.net/images/cover/370483b6b448fafeeff053a1556467da/500x500-000000-80-0-0.jpg" },
+  { title: "Are You Gonna Be My Girl", artist: "Jet", album: "Get Born", cover: "https://cdn-images.dzcdn.net/images/cover/4bd1b9573246b9323bd54d41b1c838e0/500x500-000000-80-0-0.jpg" },
+  { title: "Use Somebody", artist: "Kings of Leon", album: "Use Somebody", cover: "https://cdn-images.dzcdn.net/images/cover/34c0ff08b56fbc210b81f4163173ab51/500x500-000000-80-0-0.jpg" },
+  { title: "Last Nite", artist: "The Strokes", album: "Is This It", cover: "https://cdn-images.dzcdn.net/images/cover/99bfc862c81431e2b794f45b8d627ab0/500x500-000000-80-0-0.jpg" },
+  { title: "Take Me Out", artist: "Franz Ferdinand", album: "Franz Ferdinand", cover: "https://cdn-images.dzcdn.net/images/cover/f274cdbda80d97a785e001848378dd29/500x500-000000-80-0-0.jpg" },
+  { title: "My Hero", artist: "Foo Fighters", album: "The Colour and the Shape", cover: "https://cdn-images.dzcdn.net/images/cover/b60f3a75fb0eac77786603a940657164/500x500-000000-80-0-0.jpg" },
+  { title: "Learn to Fly", artist: "Foo Fighters", album: "There Is Nothing Left to Lose", cover: "https://cdn-images.dzcdn.net/images/cover/41130347b3bb40d357a912f7bef3969f/500x500-000000-80-0-0.jpg" },
+  { title: "Californication", artist: "Red Hot Chili Peppers", album: "Californication", cover: "https://cdn-images.dzcdn.net/images/cover/5e61e8290a4d1d64ca58920656c9602d/500x500-000000-80-0-0.jpg" },
+  { title: "Otherside", artist: "Red Hot Chili Peppers", album: "Californication", cover: "https://cdn-images.dzcdn.net/images/cover/5e61e8290a4d1d64ca58920656c9602d/500x500-000000-80-0-0.jpg" },
+  { title: "Black Hole Sun", artist: "Soundgarden", album: "Superunknown", cover: "https://cdn-images.dzcdn.net/images/cover/94248b664be0890be31cabf62a068293/500x500-000000-80-0-0.jpg" },
+  { title: "Alive", artist: "Pearl Jam", album: "Ten", cover: "https://cdn-images.dzcdn.net/images/cover/00ee8c40862fb4e258fcbeaa17d7199e/500x500-000000-80-0-0.jpg" },
+  { title: "Interstate Love Song", artist: "Stone Temple Pilots", album: "Purple", cover: "https://cdn-images.dzcdn.net/images/cover/da95a6425cc28760ea5e19068a3baea7/500x500-000000-80-0-0.jpg" },
+  { title: "Man in the Box", artist: "Alice in Chains", album: "Facelift", cover: "https://cdn-images.dzcdn.net/images/cover/e35ea43ea08ab9a2fc3d542470acf47b/500x500-000000-80-0-0.jpg" },
+  { title: "Basket Case", artist: "Green Day", album: "Dookie", cover: "https://cdn-images.dzcdn.net/images/cover/1e17054b7bfa6576f64ea867b71ef479/500x500-000000-80-0-0.jpg" },
+  { title: "The Pretender", artist: "Foo Fighters", album: "Echoes, Silence, Patience & Grace", cover: "https://cdn-images.dzcdn.net/images/cover/eeb97de903db1fd395c03da4a26ef8f5/500x500-000000-80-0-0.jpg" },
+  { title: "Zombie", artist: "The Cranberries", album: "No Need to Argue", cover: "https://cdn-images.dzcdn.net/images/cover/3cb8a08f542ee1a6961b4e5ce5248393/500x500-000000-80-0-0.jpg" },
+  { title: "Ever Fallen in Love", artist: "Buzzcocks", album: "Singles Going Steady", cover: "https://cdn-images.dzcdn.net/images/cover/8bd72c5d4cc2f6d6b72a10972c2a8fee/500x500-000000-80-0-0.jpg" },
+] as const;

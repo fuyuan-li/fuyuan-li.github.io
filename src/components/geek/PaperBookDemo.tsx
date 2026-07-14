@@ -43,8 +43,9 @@ export default function PaperBookDemo() {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* top row: the paper thumbnail (idle) or pipeline steps (processing) */}
-      <div className="flex h-36 items-center gap-5">
+      {/* top row: the paper thumbnail (idle), an arrow pointing down at the
+          drop zone below, or the pipeline steps (processing) */}
+      <div className="flex h-32 items-center gap-5">
         <AnimatePresence mode="popLayout">
           {stage === "idle" && (
             <motion.div
@@ -54,7 +55,7 @@ export default function PaperBookDemo() {
               onDragEnd={(_, info) => {
                 if (info.offset.x > 60 || info.offset.y > 30) runPipeline();
               }}
-              whileDrag={{ scale: 1.08, cursor: "grabbing" }}
+              whileDrag={{ scale: 1.08, cursor: "grabbing", zIndex: 50 }}
               exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
               className="relative flex h-32 w-24 shrink-0 flex-col gap-1.5 rounded-sm border p-2 shadow-md"
               style={{
@@ -62,6 +63,7 @@ export default function PaperBookDemo() {
                 borderColor: "var(--geek-line)",
                 color: "#2a2620",
                 cursor: "grab",
+                zIndex: 10,
               }}
             >
               <span
@@ -82,15 +84,22 @@ export default function PaperBookDemo() {
         </AnimatePresence>
 
         {stage === "idle" && (
-          <div
-            className="flex h-32 flex-1 items-center justify-center rounded-lg border-2 border-dashed text-center font-mono text-xs"
-            style={{
-              borderColor: "color-mix(in srgb, var(--geek-accent) 40%, transparent)",
-              background: "color-mix(in srgb, var(--geek-accent) 6%, transparent)",
-              color: "var(--geek-accent)",
-            }}
-          >
-            ← drop the paper here
+          <div className="flex flex-1 flex-col items-center justify-center gap-1">
+            <motion.span
+              className="font-mono text-xs opacity-50"
+              animate={{ y: [0, 4, 0] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              drag the paper down ↓
+            </motion.span>
+            <motion.span
+              className="text-2xl"
+              style={{ color: "var(--geek-accent)" }}
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+            >
+              ↓
+            </motion.span>
           </div>
         )}
 
@@ -118,14 +127,34 @@ export default function PaperBookDemo() {
         )}
       </div>
 
-      {/* the screen — a full, tall video player, not a flat strip */}
+      {/* the screen — an upload dropzone before rendering, then a full,
+          tall video player once the explainer is ready */}
       <div
         className="relative aspect-video w-full min-h-[280px] overflow-hidden rounded-xl border"
-        style={{ borderColor: "var(--geek-line)", background: "#050908" }}
+        style={{
+          borderColor: "var(--geek-line)",
+          background: stage === "done" ? "#050908" : "var(--geek-bg-raised)",
+        }}
       >
         {stage !== "done" && (
-          <div className="flex h-full w-full items-center justify-center font-mono text-xs opacity-40">
-            drop a paper above to generate the explainer
+          <div
+            className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed text-center"
+            style={{
+              borderColor: "color-mix(in srgb, var(--geek-accent) 45%, transparent)",
+              background: "color-mix(in srgb, var(--geek-accent) 8%, transparent)",
+            }}
+          >
+            <span
+              className="font-mono text-lg font-semibold tracking-wide sm:text-xl"
+              style={{ color: "var(--geek-accent)" }}
+            >
+              try it here
+            </span>
+            <span className="font-mono text-xs opacity-50">
+              {stage === "processing"
+                ? "generating your explainer…"
+                : "drop the paper above into this zone"}
+            </span>
           </div>
         )}
 

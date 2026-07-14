@@ -10,6 +10,7 @@ const ITEMS: CoverItem[] = [
   {
     id: "paperbook",
     icon: "🎬",
+    sketch: "film",
     eyebrow: "multimodal AI scientific explainer",
     title: "The PaperBook",
     tagline:
@@ -50,6 +51,7 @@ const ITEMS: CoverItem[] = [
   {
     id: "wand",
     icon: "🪄",
+    sketch: "wand",
     eyebrow: "Gemini Live Agent Challenge",
     title: "WAND",
     tagline:
@@ -86,14 +88,37 @@ const ITEMS: CoverItem[] = [
   {
     id: "seenit",
     icon: "🎯",
+    sketch: "target",
     eyebrow: "Seen It",
     title: "youtube-copilot",
     tagline:
-      "In-video search + voice control for hands-busy tutorials. Recommends products without ever interrupting the video.",
+      "Ever scrubbed a video for one scene, five seconds at a time? Ever needed to control it with your hands full? Ever gotten tired of ads elbowing into what you're watching? I built in-video search, hands-free voice control, and recommendations that show up quietly — and know when to get out of the way.",
     highlights: [
       '"Go back to where he loosens the bolt" — jumps straight to the moment',
       "Recommends products quietly, in the corner, then gets out of the way",
       "Built on Gemini Live + ADK tool-calling",
+      <>
+        Live app:{" "}
+        <a
+          href="https://seen-it-903622576229.us-central1.run.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:opacity-70"
+        >
+          seen-it-903622576229.us-central1.run.app
+        </a>
+      </>,
+      <>
+        Source:{" "}
+        <a
+          href="https://github.com/fuyuan-li/ads-by-intent"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:opacity-70"
+        >
+          github.com/fuyuan-li/ads-by-intent
+        </a>
+      </>,
     ],
     accent: PROJECT_COLORS.seenit,
     demo: <SeenItDemo />,
@@ -101,6 +126,7 @@ const ITEMS: CoverItem[] = [
   {
     id: "dispatch",
     icon: "📡",
+    sketch: "satellite",
     eyebrow: "my worst-designed, most-used tool",
     title: "dispatch-cli",
     tagline:
@@ -116,6 +142,7 @@ const ITEMS: CoverItem[] = [
   {
     id: "interview",
     icon: "🎙️",
+    sketch: "mic",
     eyebrow: "XPRIZE — Build with Gemini",
     title: "interview-coach",
     tagline:

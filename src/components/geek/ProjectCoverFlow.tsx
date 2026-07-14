@@ -3,10 +3,12 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ProjectCard from "@/components/shared/ProjectCard";
+import SketchIcon, { SketchKind } from "@/components/shared/SketchIcon";
 
 export interface CoverItem {
   id: string;
   icon: string;
+  sketch: SketchKind;
   eyebrow: string;
   title: string;
   tagline: string;
@@ -173,9 +175,11 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
                 style={{ background: `${item.accent}55` }}
               />
 
-              <span className="relative text-6xl drop-shadow-sm">
-                {item.icon}
-              </span>
+              <SketchIcon
+                kind={item.sketch}
+                color={item.accent}
+                className="relative h-16 w-16 drop-shadow-sm"
+              />
               <span className="relative font-mono text-[11px] uppercase tracking-wide opacity-50 px-4">
                 {item.eyebrow}
               </span>
