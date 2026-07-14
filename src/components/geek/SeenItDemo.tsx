@@ -107,7 +107,7 @@ export default function SeenItDemo() {
             v.play().catch(() => {});
           }
           setPlaying(true);
-          setBubble({ from: "agent", text: "Done! Let me know when you're ready to play it again." });
+          setBubble({ from: "agent", text: "Done! Found the scene she cuts the bread." });
           setBusy(false);
           // let the jump land and play for a beat before recs quietly show up
           after(2500, () => {

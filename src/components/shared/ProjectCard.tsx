@@ -16,7 +16,7 @@ export default function ProjectCard({
   icon?: string;
   eyebrow: string;
   title: string;
-  tagline: string;
+  tagline: ReactNode;
   highlights?: ReactNode[];
   actions?: ReactNode;
   theme: "geek" | "rock";
@@ -58,9 +58,9 @@ export default function ProjectCard({
         >
           {title}
         </h3>
-        <p className="mt-3 max-w-prose text-base leading-[1.55] opacity-70">
+        <div className="mt-3 max-w-prose text-base leading-[1.55] opacity-70">
           {tagline}
-        </p>
+        </div>
         {highlights && highlights.length > 0 && (
           <ul className="mt-4 flex flex-col gap-2.5">
             {highlights.map((h, i) => (

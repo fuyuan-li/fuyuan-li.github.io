@@ -3,6 +3,7 @@ import PaperBookDemo from "./PaperBookDemo";
 import WandDemo from "./WandDemo";
 import SeenItDemo from "./SeenItDemo";
 import DispatchEasterEgg from "./DispatchEasterEgg";
+import InterviewCoachDemo from "./InterviewCoachDemo";
 import SweepItem from "@/components/shared/SweepItem";
 import { PROJECT_COLORS } from "@/lib/project-colors";
 
@@ -89,10 +90,19 @@ const ITEMS: CoverItem[] = [
     id: "seenit",
     icon: "🎯",
     sketch: "target",
-    eyebrow: "Seen It",
+    eyebrow: "A Live Multimodal Video Agent",
     title: "youtube-copilot",
-    tagline:
-      "Ever scrubbed a video for one scene, five seconds at a time? Ever needed to control it with your hands full? Ever gotten tired of ads elbowing into what you're watching? I built in-video search, hands-free voice control, and recommendations that show up quietly — and know when to get out of the way.",
+    tagline: (
+      <div className="flex flex-col gap-1.5">
+        <span>Ever scrubbed a video for one scene, five seconds at a time?</span>
+        <span>Ever needed to control it with your hands full?</span>
+        <span>Ever gotten tired of ads elbowing into what you&apos;re watching?</span>
+        <span className="mt-1.5">
+          I built in-video search, hands-free voice control, and recommendations
+          that show up quietly — and know when to get out of the way.
+        </span>
+      </div>
+    ),
     highlights: [
       '"Go back to where he loosens the bolt" — jumps straight to the moment',
       "Recommends products quietly, in the corner, then gets out of the way",
@@ -100,12 +110,12 @@ const ITEMS: CoverItem[] = [
       <>
         Live app:{" "}
         <a
-          href="https://seen-it-903622576229.us-central1.run.app/"
+          href="https://youtube-copilot-729166048428.us-central1.run.app/"
           target="_blank"
           rel="noopener noreferrer"
           className="underline underline-offset-2 hover:opacity-70"
         >
-          seen-it-903622576229.us-central1.run.app
+          youtube-copilot-729166048428.us-central1.run.app
         </a>
       </>,
       <>
@@ -153,11 +163,7 @@ const ITEMS: CoverItem[] = [
       "Part of the Build with Gemini XPRIZE project",
     ],
     accent: PROJECT_COLORS.interview,
-    demo: (
-      <p className="font-mono text-sm opacity-50">
-        interactive demo coming — for now, the repo speaks for itself.
-      </p>
-    ),
+    demo: <InterviewCoachDemo />,
   },
 ];
 

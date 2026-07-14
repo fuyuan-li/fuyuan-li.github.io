@@ -11,7 +11,7 @@ export interface CoverItem {
   sketch: SketchKind;
   eyebrow: string;
   title: string;
-  tagline: string;
+  tagline: ReactNode;
   highlights: ReactNode[];
   accent: string;
   demo: ReactNode;
@@ -86,6 +86,10 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
   }, [openItem]);
 
   const wrapTimerRef = useRef<number | null>(null);
+  // true while we're driving the scroll ourselves (dot/card click) — a free
+  // drag by the user should close whatever demo panel is open, since we
+  // don't know where they're headed until the gesture ends
+  const programmaticScrollRef = useRef(false);
 
   const handleScroll = () => {
     const el = trackRef.current;
@@ -94,6 +98,10 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
     // so it can't fight a fast native scroll
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     rafRef.current = requestAnimationFrame(applyTransforms);
+
+    if (!programmaticScrollRef.current) {
+      setOpenId((o) => (o ? null : o));
+    }
 
     // only correct the loop-wrap once scrolling has actually settled —
     // doing it mid-flick (fast trackpad flings) fought the browser's own
@@ -112,7 +120,11 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
   };
 
   const scrollToLoopIndex = (loopIndex: number) => {
+    programmaticScrollRef.current = true;
     trackRef.current?.scrollTo({ left: loopIndex * STEP, behavior: "smooth" });
+    window.setTimeout(() => {
+      programmaticScrollRef.current = false;
+    }, 500);
   };
 
   const currentNearestLi = () => {
@@ -148,6 +160,7 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
                   setOpenId((o) => (o === item.id ? null : item.id));
                 } else {
                   scrollToLoopIndex(li);
+                  setOpenId((o) => (o ? item.id : o));
                 }
               }}
               className="relative flex h-80 w-60 shrink-0 flex-col items-center justify-center gap-3 overflow-hidden rounded-3xl border text-center"

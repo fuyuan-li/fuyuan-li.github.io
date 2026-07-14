@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 const clips = [
@@ -61,32 +62,23 @@ const clips = [
   },
 ];
 
-const LOOPED_CLIPS = [...clips, ...clips, ...clips];
-const CARD_GAP = 24;
-
 export default function PerformanceReel() {
   const count = clips.length;
+  const loopedClips = [...clips, ...clips, ...clips];
   const trackRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
   const frameRef = useRef<number | null>(null);
+  const wrapTimerRef = useRef<number | null>(null);
   const [centerLoopIndex, setCenterLoopIndex] = useState(count);
 
-  const getCardLeft = useCallback(
-    (track: HTMLDivElement, card: HTMLDivElement) =>
-      card.offsetLeft -
-      track.offsetLeft -
-      (track.clientWidth - card.offsetWidth) / 2,
-    [],
-  );
-
-  const positionAtLoopIndex = useCallback(
-    (index: number, behavior: ScrollBehavior = "smooth") => {
+  const scrollToLoopIndex = useCallback(
+    (loopIndex: number, behavior: ScrollBehavior = "smooth") => {
       const track = trackRef.current;
-      const card = cardRefs.current.get(index);
+      const card = cardRefs.current.get(loopIndex);
       if (!track || !card) return;
-      track.scrollTo({ left: getCardLeft(track, card), behavior });
+      track.scrollTo({ left: card.offsetLeft - track.offsetLeft, behavior });
     },
-    [getCardLeft],
+    [],
   );
 
   const getNearestLoopIndex = useCallback(() => {
@@ -97,101 +89,77 @@ export default function PerformanceReel() {
     let nearestIndex = count;
     let nearestDistance = Number.POSITIVE_INFINITY;
 
-    cardRefs.current.forEach((card, index) => {
+    cardRefs.current.forEach((card, loopIndex) => {
       const cardCenter =
         card.offsetLeft - track.offsetLeft + card.offsetWidth / 2;
       const distance = Math.abs(cardCenter - trackCenter);
       if (distance < nearestDistance) {
         nearestDistance = distance;
-        nearestIndex = index;
+        nearestIndex = loopIndex;
       }
     });
 
     return nearestIndex;
   }, [count]);
 
-  const applyTransforms = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const trackCenter = track.scrollLeft + track.clientWidth / 2;
-    const nearestIndex = getNearestLoopIndex();
-
-    cardRefs.current.forEach((card) => {
-      const cardCenter =
-        card.offsetLeft - track.offsetLeft + card.offsetWidth / 2;
-      const offset =
-        (cardCenter - trackCenter) / (card.offsetWidth + CARD_GAP);
-      const distance = Math.abs(offset);
-      const scale = Math.max(0.58, 1 - distance * 0.2);
-      const rotateY = Math.max(-48, Math.min(48, offset * -34));
-      const opacity = Math.max(0.22, 1 - distance * 0.32);
-      const pullTowardCenter = Math.max(
-        -240,
-        Math.min(240, offset * -150),
-      );
-
-      card.style.transform = `translateX(${pullTowardCenter}px) scale(${scale}) rotateY(${rotateY}deg)`;
-      card.style.opacity = String(opacity);
-      card.style.zIndex = String(Math.max(1, Math.round(20 - distance * 4)));
-    });
-
-    setCenterLoopIndex((current) =>
-      current === nearestIndex ? current : nearestIndex,
-    );
-  }, [getNearestLoopIndex]);
-
   useEffect(() => {
-    positionAtLoopIndex(count, "auto");
-    applyTransforms();
-    const settleTimer = window.setTimeout(() => {
-      positionAtLoopIndex(count, "auto");
-      applyTransforms();
-    }, 80);
-
-    return () => window.clearTimeout(settleTimer);
-  }, [applyTransforms, count, positionAtLoopIndex]);
+    scrollToLoopIndex(count, "auto");
+  }, [count, scrollToLoopIndex]);
 
   useEffect(() => {
     return () => {
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
+      if (wrapTimerRef.current !== null) {
+        window.clearTimeout(wrapTimerRef.current);
+      }
     };
   }, []);
 
   const handleScroll = () => {
     if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     frameRef.current = requestAnimationFrame(() => {
-      let nearestIndex = getNearestLoopIndex();
+      const nearestIndex = getNearestLoopIndex();
+      setCenterLoopIndex(nearestIndex);
 
-      if (nearestIndex < count) {
-        nearestIndex += count;
-        positionAtLoopIndex(nearestIndex, "auto");
-      } else if (nearestIndex >= count * 2) {
-        nearestIndex -= count;
-        positionAtLoopIndex(nearestIndex, "auto");
+      if (wrapTimerRef.current !== null) {
+        window.clearTimeout(wrapTimerRef.current);
       }
-
-      applyTransforms();
+      wrapTimerRef.current = window.setTimeout(() => {
+        if (nearestIndex < count) {
+          const wrappedIndex = nearestIndex + count;
+          scrollToLoopIndex(wrappedIndex, "auto");
+          setCenterLoopIndex(wrappedIndex);
+        } else if (nearestIndex >= count * 2) {
+          const wrappedIndex = nearestIndex - count;
+          scrollToLoopIndex(wrappedIndex, "auto");
+          setCenterLoopIndex(wrappedIndex);
+        }
+      }, 140);
     });
   };
 
-  const activeIndex =
-    ((centerLoopIndex % count) + count) % count;
+  const activeIndex = ((centerLoopIndex % count) + count) % count;
+  const showPrevious = () => scrollToLoopIndex(centerLoopIndex - 1);
+  const showNext = () => scrollToLoopIndex(centerLoopIndex + 1);
 
   return (
-    <div className="flex flex-col gap-4">
-      <div style={{ perspective: "1600px" }}>
+    <div
+      className="flex flex-col gap-4 outline-none"
+      tabIndex={0}
+      aria-label="Horizontally scrollable performance gallery."
+      onKeyDown={(event) => {
+        if (event.key === "ArrowLeft") showPrevious();
+        if (event.key === "ArrowRight") showNext();
+      }}
+    >
+      <div className="relative mx-auto w-full max-w-[760px]">
         <div
           ref={trackRef}
           onScroll={handleScroll}
-          className="scrollbar-none flex h-[250px] items-center gap-6 overflow-x-auto overflow-y-hidden sm:h-[350px]"
-          style={{
-            scrollSnapType: "x mandatory",
-            paddingInline: "calc(50% - min(64vw, 420px) / 2)",
-          }}
+          className="scrollbar-none flex w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain"
         >
-          {LOOPED_CLIPS.map((clip, loopIndex) => {
-            const isCenter = loopIndex === centerLoopIndex;
+          {loopedClips.map((clip, loopIndex) => {
+            const isActive = loopIndex === centerLoopIndex;
 
             return (
               <div
@@ -200,97 +168,85 @@ export default function PerformanceReel() {
                   if (element) cardRefs.current.set(loopIndex, element);
                   else cardRefs.current.delete(loopIndex);
                 }}
-                tabIndex={0}
-                aria-label={`${clip.title} ${clip.song}`}
-                aria-current={isCenter ? "true" : undefined}
-                onClick={() => {
-                  if (!isCenter) positionAtLoopIndex(loopIndex);
-                }}
-                onKeyDown={(event) => {
-                  if ((event.key === "Enter" || event.key === " ") && !isCenter) {
-                    event.preventDefault();
-                    positionAtLoopIndex(loopIndex);
-                  }
-                }}
-                className="relative w-[64vw] max-w-[420px] shrink-0 cursor-pointer overflow-hidden rounded-2xl border outline-none focus-visible:ring-2 focus-visible:ring-[var(--rock-accent)]"
-                style={{
-                  scrollSnapAlign: "center",
-                  borderColor: isCenter
-                    ? "var(--rock-accent)"
-                    : "var(--rock-line)",
-                  background: "var(--rock-bg-raised)",
-                  color: "var(--rock-fg)",
-                  transformStyle: "preserve-3d",
-                  willChange: "transform, opacity",
-                  boxShadow: isCenter
-                    ? "0 34px 70px -26px rgba(255, 91, 60, 0.72)"
-                    : "0 22px 42px -26px rgba(0, 0, 0, 0.9)",
-                }}
+                className="w-full shrink-0 snap-center"
+                aria-hidden={loopIndex < count || loopIndex >= count * 2}
               >
-                <div className="relative aspect-video w-full overflow-hidden bg-black">
-                  {isCenter ? (
-                    <video
-                      key={clip.src}
-                      className="h-full w-full object-cover"
-                      src={clip.src}
-                      poster={clip.poster}
-                      aria-label={`${clip.title} ${clip.song}`}
-                      autoPlay
-                      controls
-                      loop
-                      muted
-                      playsInline
-                      preload="metadata"
-                    />
-                  ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      className="h-full w-full object-cover"
-                      src={clip.poster}
-                      alt=""
-                      loading="lazy"
-                    />
-                  )}
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10" />
-                </div>
+                <article
+                  className="overflow-hidden rounded-2xl border"
+                  style={{
+                    borderColor: "var(--rock-accent)",
+                    background: "var(--rock-bg-raised)",
+                    boxShadow:
+                      "0 34px 70px -30px rgba(255, 91, 60, 0.68)",
+                  }}
+                >
+                  <div className="relative aspect-video w-full overflow-hidden bg-black">
+                    {isActive ? (
+                      <video
+                        key={clip.src}
+                        className="h-full w-full object-cover"
+                        src={clip.src}
+                        poster={clip.poster}
+                        aria-label={`${clip.title} ${clip.song}`}
+                        autoPlay
+                        controls
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                      />
+                    ) : (
+                      <Image
+                        src={clip.poster}
+                        alt=""
+                        fill
+                        sizes="(max-width: 768px) 100vw, 760px"
+                        className="object-cover"
+                      />
+                    )}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/15 via-transparent to-white/10" />
+                  </div>
 
-                <div className="flex min-h-[68px] flex-wrap items-center justify-between gap-x-4 gap-y-1 px-4 py-3 sm:px-5">
-                  <h4 className="font-display text-lg tracking-wide sm:text-2xl">
-                    {clip.title}
-                  </h4>
-                  <p className="text-xs opacity-65 sm:text-sm">{clip.song}</p>
-                </div>
+                  <div className="flex min-h-[76px] flex-wrap items-center justify-between gap-x-5 gap-y-1 px-5 py-3 sm:px-6">
+                    <h4 className="font-display text-xl tracking-wide sm:text-2xl">
+                      {clip.title}
+                    </h4>
+                    <p className="text-xs opacity-65 sm:text-sm">
+                      {clip.song}
+                    </p>
+                  </div>
+                </article>
               </div>
             );
           })}
         </div>
+
+        <button
+          type="button"
+          aria-label="Previous performance"
+          onClick={showPrevious}
+          className="absolute left-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border bg-black/70 text-2xl text-white shadow-xl backdrop-blur-sm transition-transform hover:scale-105 sm:left-4"
+          style={{ borderColor: "var(--rock-line)" }}
+        >
+          ←
+        </button>
+        <button
+          type="button"
+          aria-label="Next performance"
+          onClick={showNext}
+          className="absolute right-3 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border bg-black/70 text-2xl text-white shadow-xl backdrop-blur-sm transition-transform hover:scale-105 sm:right-4"
+          style={{ borderColor: "var(--rock-line)" }}
+        >
+          →
+        </button>
       </div>
 
       <div className="flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.18em]">
         <span className="opacity-45">
           {String(activeIndex + 1).padStart(2, "0")} / {String(clips.length).padStart(2, "0")}
-          <span className="ml-3 hidden sm:inline">cover flow · swipe sideways</span>
+          <span className="ml-3 hidden sm:inline">← scroll →</span>
         </span>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            aria-label="Previous performance"
-            onClick={() => positionAtLoopIndex(centerLoopIndex - 1)}
-            className="flex h-8 w-10 items-center justify-center rounded-full border text-sm"
-            style={{ borderColor: "var(--rock-line)" }}
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            aria-label="Next performance"
-            onClick={() => positionAtLoopIndex(centerLoopIndex + 1)}
-            className="flex h-8 w-10 items-center justify-center rounded-full border text-sm"
-            style={{ borderColor: "var(--rock-line)" }}
-          >
-            →
-          </button>
-        </div>
+        <span className="opacity-45">one stage at a time</span>
       </div>
 
       <div className="flex justify-center gap-1.5">
@@ -299,7 +255,7 @@ export default function PerformanceReel() {
             key={clip.id}
             type="button"
             aria-label={`Go to ${clip.song}`}
-            onClick={() => positionAtLoopIndex(count + index)}
+            onClick={() => scrollToLoopIndex(count + index)}
             className="h-1.5 w-6 rounded-full transition-colors"
             style={{
               background:
