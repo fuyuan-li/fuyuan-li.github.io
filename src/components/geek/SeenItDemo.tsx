@@ -107,9 +107,12 @@ export default function SeenItDemo() {
             v.play().catch(() => {});
           }
           setPlaying(true);
-          setJumpOrder((o) => (o.includes("bread") ? o : [...o, "bread"]));
           setBubble({ from: "agent", text: "Done! Let me know when you're ready to play it again." });
           setBusy(false);
+          // let the jump land and play for a beat before recs quietly show up
+          after(2500, () => {
+            setJumpOrder((o) => (o.includes("bread") ? o : [...o, "bread"]));
+          });
         });
       });
     });
@@ -124,9 +127,11 @@ export default function SeenItDemo() {
             v.play().catch(() => {});
           }
           setPlaying(true);
-          setJumpOrder((o) => (o.includes("mix") ? o : [...o, "mix"]));
           setBubble({ from: "agent", text: "Got it, jumped to that part for you." });
           setBusy(false);
+          after(2500, () => {
+            setJumpOrder((o) => (o.includes("mix") ? o : [...o, "mix"]));
+          });
         });
       });
     });
