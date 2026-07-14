@@ -271,7 +271,7 @@ const ITEMS: CoverItem[] = [
 export default function GeekView() {
   return (
     <div className="flex flex-col gap-10">
-      <SweepItem at={0.15}>
+      <SweepItem at={0.52}>
         <header className="flex flex-col gap-3">
           <span className="font-mono text-xs uppercase tracking-[0.3em] opacity-50">
             fuyuan li — geek_mode
@@ -284,7 +284,7 @@ export default function GeekView() {
         </header>
       </SweepItem>
 
-      <SweepItem at={0.6}>
+      <SweepItem at={0.16}>
         <ProjectCoverFlow items={ITEMS} />
       </SweepItem>
     </div>

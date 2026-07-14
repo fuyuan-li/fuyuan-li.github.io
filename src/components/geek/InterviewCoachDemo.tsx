@@ -154,6 +154,7 @@ export default function InterviewCoachDemo() {
   const [stepIndex, setStepIndex] = useState(0);
   const [settledCount, setSettledCount] = useState(0);
   const [revealed, setRevealed] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const timers = useRef<number[]>([]);
   const charInterval = useRef<number | null>(null);
 
@@ -227,13 +228,49 @@ export default function InterviewCoachDemo() {
           <motion.div
             drag
             dragSnapToOrigin
+            animate={
+              isDragging
+                ? { y: 0, rotate: 0 }
+                : { y: [0, -4, 0], rotate: [0, -1.2, 1.2, 0] }
+            }
+            transition={
+              isDragging
+                ? { duration: 0.1 }
+                : {
+                    duration: 1.8,
+                    repeat: Infinity,
+                    repeatDelay: 0.6,
+                    ease: "easeInOut",
+                  }
+            }
+            onDragStart={() => setIsDragging(true)}
             onDragEnd={(_, info) => {
+              setIsDragging(false);
               if (info.offset.x > 60 || info.offset.y > 30) runProcessing();
             }}
             whileDrag={{ scale: 1.08, cursor: "grabbing", zIndex: 50 }}
             className="relative flex h-32 w-24 shrink-0 flex-col gap-1.5 rounded-sm border p-2 shadow-md"
             style={{ background: "#fdfaf4", borderColor: "var(--geek-line)", color: "#2a2620", cursor: "grab" }}
           >
+            <motion.span
+              aria-hidden
+              className="pointer-events-none absolute -inset-1 rounded-md border-2"
+              style={{
+                borderColor: "var(--geek-accent)",
+                boxShadow: "0 0 18px var(--geek-accent)",
+              }}
+              animate={
+                isDragging
+                  ? { opacity: 0, scale: 1 }
+                  : { opacity: [0.2, 0.72, 0.2], scale: [1, 1.035, 1] }
+              }
+              transition={{
+                duration: 1.8,
+                repeat: isDragging ? 0 : Infinity,
+                repeatDelay: 0.6,
+                ease: "easeInOut",
+              }}
+            />
             <span className="h-1 w-full rounded-full" style={{ background: "var(--geek-accent)" }} />
             <span className="font-serif text-[9px] font-bold leading-tight">My Resume</span>
             <span className="mt-auto flex flex-col gap-0.5 opacity-30">

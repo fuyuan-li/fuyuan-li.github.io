@@ -16,6 +16,7 @@ const PIPELINE_STEPS = [
 export default function PaperBookDemo() {
   const [stage, setStage] = useState<Stage>("idle");
   const [stepIndex, setStepIndex] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const timers = useRef<number[]>([]);
 
   const runPipeline = () => {
@@ -52,7 +53,24 @@ export default function PaperBookDemo() {
               key="paper"
               drag
               dragSnapToOrigin
+              animate={
+                isDragging
+                  ? { y: 0, rotate: 0 }
+                  : { y: [0, -4, 0], rotate: [0, -1.2, 1.2, 0] }
+              }
+              transition={
+                isDragging
+                  ? { duration: 0.1 }
+                  : {
+                      duration: 1.8,
+                      repeat: Infinity,
+                      repeatDelay: 0.6,
+                      ease: "easeInOut",
+                    }
+              }
+              onDragStart={() => setIsDragging(true)}
               onDragEnd={(_, info) => {
+                setIsDragging(false);
                 if (info.offset.x > 60 || info.offset.y > 30) runPipeline();
               }}
               whileDrag={{ scale: 1.08, cursor: "grabbing", zIndex: 50 }}
@@ -66,6 +84,25 @@ export default function PaperBookDemo() {
                 zIndex: 10,
               }}
             >
+              <motion.span
+                aria-hidden
+                className="pointer-events-none absolute -inset-1 rounded-md border-2"
+                style={{
+                  borderColor: "var(--geek-accent)",
+                  boxShadow: "0 0 18px var(--geek-accent)",
+                }}
+                animate={
+                  isDragging
+                    ? { opacity: 0, scale: 1 }
+                    : { opacity: [0.2, 0.72, 0.2], scale: [1, 1.035, 1] }
+                }
+                transition={{
+                  duration: 1.8,
+                  repeat: isDragging ? 0 : Infinity,
+                  repeatDelay: 0.6,
+                  ease: "easeInOut",
+                }}
+              />
               <span
                 className="h-1 w-full rounded-full"
                 style={{ background: "var(--geek-accent)" }}
@@ -84,22 +121,11 @@ export default function PaperBookDemo() {
         </AnimatePresence>
 
         {stage === "idle" && (
-          <div className="flex flex-1 flex-col items-center justify-center gap-1">
-            <motion.span
-              className="font-mono text-xs opacity-50"
-              animate={{ y: [0, 4, 0] }}
-              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-            >
-              drag the paper down ↓
-            </motion.span>
-            <motion.span
-              className="text-2xl"
-              style={{ color: "var(--geek-accent)" }}
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
-            >
-              ↓
-            </motion.span>
+          <div className="flex flex-1 items-center justify-center">
+            <span className="font-mono text-xs opacity-55">
+              <span style={{ color: "var(--geek-accent)" }}>←</span> drag the
+              paper down <span style={{ color: "var(--geek-accent)" }}>↓</span>
+            </span>
           </div>
         )}
 

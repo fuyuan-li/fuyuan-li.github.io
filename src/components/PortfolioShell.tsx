@@ -13,7 +13,7 @@ import RockView from "@/components/rock/RockView";
 
 function Shell() {
   const { mode } = useMode();
-  const { phase, reset } = useSweep();
+  const { phase, progress, reset } = useSweep();
   const isRock = mode === "rock";
 
   // switching mode always hands back a clean page in the other theme
@@ -22,7 +22,9 @@ function Shell() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode]);
 
-  const swept = phase === "active";
+  const toggleReturning = phase === "done" || (phase === "sweeping" && progress >= 0.78);
+  const toggleAway = phase === "sweeping" && progress < 0.78;
+  const toggleDetached = !isRock && (phase === "sweeping" || phase === "done");
 
   return (
     <div
@@ -34,7 +36,7 @@ function Shell() {
     >
       <div className="mx-auto flex max-w-3xl flex-col gap-10 px-5 py-10 sm:px-8 sm:py-14">
         <div className="flex items-center justify-between">
-          <SweepItem at={0.05}>
+          <SweepItem at={0.7}>
             <span
               className={
                 isRock
@@ -46,16 +48,25 @@ function Shell() {
             </span>
           </SweepItem>
           <motion.div
-            animate={
-              swept
-                ? {
-                    scale: [1, 1.15, 1],
-                    boxShadow: "0 0 0 4px var(--geek-accent-dim)",
-                  }
-                : { scale: 1, boxShadow: "0 0 0 0px transparent" }
+            animate={{
+              x: toggleAway ? 220 : 0,
+              opacity: toggleAway ? 0 : 1,
+              scale: toggleReturning ? [1, 1.12, 1] : 1,
+              boxShadow: toggleReturning
+                ? "0 0 0 4px var(--geek-accent-dim)"
+                : "0 0 0 0px transparent",
+            }}
+            transition={{
+              x: { duration: toggleReturning ? 0.9 : 0.2, ease: "easeOut" },
+              opacity: { duration: 0.2 },
+              scale: { duration: 0.55 },
+              boxShadow: { duration: 0.55 },
+            }}
+            className={
+              toggleDetached
+                ? "fixed right-5 top-6 z-[95] rounded-full sm:right-8"
+                : "rounded-full"
             }
-            transition={{ duration: 0.6, delay: swept ? 1.9 : 0 }}
-            className="rounded-full"
           >
             <ModeToggle />
           </motion.div>
