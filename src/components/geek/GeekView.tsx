@@ -187,41 +187,6 @@ const ITEMS: CoverItem[] = [
     demo: <SeenItDemo />,
   },
   {
-    id: "dispatch",
-    icon: "📡",
-    sketch: "satellite",
-    eyebrow: "Worst designed, most used",
-    title: "dispatch-cli",
-    tagline: (
-      <ProjectTip accent={PROJECT_COLORS.dispatch}>
-        <p>
-          So far, none of these projects is my day job — and you probably
-          don&apos;t care which model I accidentally trained into the ground this
-          week. So when did I build them? The glamorous way: between overtime
-          and on-call pages.
-        </p>
-        <p>
-          I wrote dispatch-cli so I could keep building from the subway, over
-          lunch, or while walking the dog. It failed beautifully: the UI is my
-          worst, and soon after, Claude, OpenAI, and Gemini all shipped official
-          versions of the same idea.
-        </p>
-        <p>
-          Fine. I still use mine. It switches across all three of my
-          subscription accounts without touching API billing. Also, it can
-          boss around my robot vacuum.
-        </p>
-      </ProjectTip>
-    ),
-    highlights: [
-      "Your own private, remote version of Claude Code, Codex, and Gemini CLI.",
-      "The tool that quietly makes every other hobby project faster to build.",
-      "Switch between all your AI accounts mid-session. Hit a token limit? Seamlessly move to the next one.",
-    ],
-    accent: PROJECT_COLORS.dispatch,
-    demo: <DispatchEasterEgg />,
-  },
-  {
     id: "interview",
     icon: "🎙️",
     sketch: "mic",
@@ -265,6 +230,41 @@ const ITEMS: CoverItem[] = [
     ],
     accent: PROJECT_COLORS.interview,
     demo: <InterviewCoachDemo />,
+  },
+  {
+    id: "dispatch",
+    icon: "📡",
+    sketch: "satellite",
+    eyebrow: "Worst designed, most used",
+    title: "dispatch-cli",
+    tagline: (
+      <ProjectTip accent={PROJECT_COLORS.dispatch}>
+        <p>
+          So far, none of these projects is my day job — and you probably
+          don&apos;t care which model I accidentally trained into the ground this
+          week. So when did I build them? The glamorous way: between overtime
+          and on-call pages.
+        </p>
+        <p>
+          I wrote dispatch-cli so I could keep building from the subway, over
+          lunch, or while walking the dog. It failed beautifully: the UI is my
+          worst, and soon after, Claude, OpenAI, and Gemini all shipped official
+          versions of the same idea.
+        </p>
+        <p>
+          Fine. I still use mine. It switches across all three of my
+          subscription accounts without touching API billing. Also, it can
+          boss around my robot vacuum.
+        </p>
+      </ProjectTip>
+    ),
+    highlights: [
+      "Your own private, remote version of Claude Code, Codex, and Gemini CLI.",
+      "The tool that quietly makes every other hobby project faster to build.",
+      "Switch between all your AI accounts mid-session. Hit a token limit? Seamlessly move to the next one.",
+    ],
+    accent: PROJECT_COLORS.dispatch,
+    demo: <DispatchEasterEgg />,
   },
 ];
 
