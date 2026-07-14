@@ -16,11 +16,12 @@ function Shell() {
   const { phase, progress, reset } = useSweep();
   const isRock = mode === "rock";
 
-  // switching mode always hands back a clean page in the other theme
+  // Every mode switch opens the other side from its beginning, even when the
+  // toggle was reached through the vacuum easter egg at the bottom of Geek.
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     reset();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  }, [mode, reset]);
 
   const toggleReturning = phase === "done" || (phase === "sweeping" && progress >= 0.78);
   const toggleAway = phase === "sweeping" && progress < 0.78;
