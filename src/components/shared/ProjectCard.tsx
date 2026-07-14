@@ -58,15 +58,8 @@ export default function ProjectCard({
         >
           {title}
         </h3>
-        <div
-          className={`mt-3 max-w-prose text-base leading-[1.55] ${
-            isRock ? "opacity-70" : ""
-          }`}
-        >
-          {tagline}
-        </div>
         {highlights && highlights.length > 0 && (
-          <ul className="mt-4 flex flex-col gap-2.5">
+          <ul className="mt-3 flex flex-col gap-2.5">
             {highlights.map((h, i) => (
               <li
                 key={i}
@@ -81,6 +74,13 @@ export default function ProjectCard({
             ))}
           </ul>
         )}
+        <div
+          className={`mt-4 max-w-prose text-base leading-[1.55] ${
+            isRock ? "opacity-70" : ""
+          }`}
+        >
+          {tagline}
+        </div>
       </header>
       <div className="mt-1">{children}</div>
     </section>

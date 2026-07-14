@@ -17,21 +17,28 @@ export default function ProjectTip({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 self-start rounded-full border px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
+        className="flex items-center gap-2 self-start rounded-full border px-3.5 py-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em] shadow-sm transition-transform active:scale-[0.97]"
         style={{
-          borderColor: `color-mix(in srgb, ${accent} 30%, var(--geek-line))`,
+          borderColor: `color-mix(in srgb, ${accent} 45%, var(--geek-line))`,
           color: accent,
+          background: `color-mix(in srgb, ${accent} 12%, var(--geek-bg-raised))`,
         }}
       >
         <span
           className="flex h-5 w-5 items-center justify-center rounded-full text-xs"
-          style={{ background: `color-mix(in srgb, ${accent} 16%, transparent)` }}
+          style={{ background: `color-mix(in srgb, ${accent} 22%, transparent)` }}
           aria-hidden
         >
           💡
         </span>
-        why this exists
-        <span aria-hidden>{open ? "▲" : "▾"}</span>
+        why I built this
+        <span
+          aria-hidden
+          className="ml-0.5 rounded-full px-1.5 py-0.5 text-[9px]"
+          style={{ background: `color-mix(in srgb, ${accent} 20%, transparent)` }}
+        >
+          {open ? "hide ▲" : "tap to read ▾"}
+        </span>
       </button>
 
       <AnimatePresence initial={false}>
