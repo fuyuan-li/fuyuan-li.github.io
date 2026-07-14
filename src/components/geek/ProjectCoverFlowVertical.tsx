@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ProjectCard from "@/components/shared/ProjectCard";
 import SketchIcon from "@/components/shared/SketchIcon";
@@ -8,6 +8,42 @@ import type { CoverItem } from "./ProjectCoverFlow";
 
 export default function ProjectCoverFlowVertical({ items }: { items: CoverItem[] }) {
   const [openId, setOpenId] = useState<string | null>(null);
+  const panelRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    if (!openId) return;
+    const el = panelRefs.current.get(openId);
+    if (!el) return;
+
+    const t = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 380);
+
+    // demos grow/shrink as their internal state advances — keep the panel's
+    // bottom in view as that happens instead of leaving users to scroll
+    // down manually
+    let raf: number | null = null;
+    const ro = new ResizeObserver(() => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const overflow = rect.bottom - window.innerHeight;
+        if (overflow > 8) {
+          window.scrollBy({
+            top: Math.min(overflow + 24, window.innerHeight * 0.6),
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+    ro.observe(el);
+
+    return () => {
+      window.clearTimeout(t);
+      ro.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [openId]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -51,7 +87,13 @@ export default function ProjectCoverFlowVertical({ items }: { items: CoverItem[]
                   transition={{ duration: 0.3, ease: "easeOut" }}
                   style={{ overflow: "hidden" }}
                 >
-                  <div className="pt-3">
+                  <div
+                    ref={(el) => {
+                      if (el) panelRefs.current.set(item.id, el);
+                      else panelRefs.current.delete(item.id);
+                    }}
+                    className="pt-3"
+                  >
                     <ProjectCard
                       icon={item.icon}
                       eyebrow={item.eyebrow}

@@ -294,59 +294,10 @@ export default function WandDemo() {
   return (
     <div className="flex flex-col gap-4">
       {/* the scenario — always visible, never ambiguous */}
-      <div className="flex items-center justify-between gap-3 rounded-lg border p-3" style={{ borderColor: "var(--geek-line)" }}>
+      <div className="flex items-center gap-3 rounded-lg border p-3" style={{ borderColor: "var(--geek-line)" }}>
         <span className="font-mono text-xs opacity-70">
-          🍗 picture this: hands full of fried chicken. try to buy the crystal shoes anyway.
+          🍗 picture this: fingers greasy from fried chicken. try to buy the crystal shoes anyway.
         </span>
-        <div className="relative shrink-0">
-          <AnimatePresence>
-            {retryCount >= 2 && dirty && !cart && (
-              <motion.div
-                initial={{ opacity: 0, y: -4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="absolute -top-9 right-0 flex flex-col items-end whitespace-nowrap"
-              >
-                <span
-                  className="rounded-md px-2 py-1 font-mono text-[10px] text-white shadow"
-                  style={{ background: "var(--geek-accent)" }}
-                >
-                  maybe try WAND? →
-                </span>
-                <motion.span
-                  className="text-lg"
-                  style={{ color: "var(--geek-accent)" }}
-                  animate={{ y: [0, 3, 0] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                >
-                  ↘
-                </motion.span>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          <button
-            type="button"
-            onClick={() => {
-              const next = !wandOn;
-              setWandOn(next);
-              if (started) {
-                // flipping WAND on mid-demo replays immediately — no extra
-                // click needed, since starting the demo already was the ask
-                if (next) start(true);
-                else reset();
-              }
-            }}
-            className="relative flex h-6 w-12 items-center rounded-full transition-colors"
-            style={{ background: wandOn ? "var(--geek-accent)" : "var(--geek-line)" }}
-            aria-label="toggle WAND"
-          >
-            <motion.span
-              className="absolute h-5 w-5 rounded-full bg-white shadow"
-              animate={{ left: wandOn ? "calc(100% - 22px)" : "2px" }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-            />
-          </button>
-        </div>
       </div>
 
       {!started && (
@@ -355,7 +306,7 @@ export default function WandDemo() {
           className="self-start rounded-full border px-4 py-2 font-mono text-xs"
           style={{ borderColor: "var(--geek-accent)", color: "var(--geek-accent)" }}
         >
-          {wandOn ? "watch WAND do it ▸" : "try it with greasy hands ▸"}
+          try buying crystal shoes with greasy hands ▸
         </button>
       )}
 
@@ -402,19 +353,35 @@ export default function WandDemo() {
 
               {/* search bar */}
               <div className="relative flex items-center gap-2">
-                <button
+                <motion.button
                   ref={searchBarRef}
                   onClick={handleTapInput}
                   disabled={showResults}
                   className="flex-1 truncate rounded-full border bg-white px-4 py-2 text-left font-sans text-sm disabled:opacity-70"
-                  style={{
-                    borderColor: showKeyboard ? "var(--geek-accent)" : "var(--geek-line)",
-                  }}
+                  animate={
+                    !showKeyboard && !showResults && !wandOn
+                      ? {
+                          borderColor: "var(--geek-accent)",
+                          boxShadow: [
+                            "0 0 0 0px color-mix(in srgb, var(--geek-accent) 45%, transparent)",
+                            "0 0 0 5px color-mix(in srgb, var(--geek-accent) 0%, transparent)",
+                          ],
+                        }
+                      : {
+                          borderColor: showKeyboard ? "var(--geek-accent)" : "var(--geek-line)",
+                          boxShadow: "0 0 0 0px transparent",
+                        }
+                  }
+                  transition={
+                    !showKeyboard && !showResults && !wandOn
+                      ? { boxShadow: { duration: 1.2, repeat: Infinity }, borderColor: { duration: 0.2 } }
+                      : { duration: 0.2 }
+                  }
                 >
                   {(query || typed) || (
                     <span className="text-gray-400">tap to search…</span>
                   )}
-                </button>
+                </motion.button>
                 <motion.button
                   onClick={submitSearch}
                   disabled={showResults || wandOn || !canSubmit}
@@ -642,25 +609,110 @@ export default function WandDemo() {
                 }}
               />
             ))}
+
+            {/* success stamp — greys the screen and slams down a rubber-stamp
+                style confirmation once WAND finishes the task correctly */}
+            <AnimatePresence>
+              {cart === "crystal" && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ delay: 0.2, duration: 0.3 }}
+                  className="pointer-events-none absolute inset-0 z-40 flex items-center justify-center"
+                  style={{ background: "rgba(10,10,10,0.4)" }}
+                >
+                  <motion.div
+                    initial={{ scale: 2.4, opacity: 0, rotate: -10 }}
+                    animate={{ scale: 1, opacity: 1, rotate: -10 }}
+                    transition={{ delay: 0.35, type: "spring", stiffness: 320, damping: 14 }}
+                    className="rounded-lg border-4 px-5 py-3 text-center font-mono uppercase leading-tight"
+                    style={{
+                      borderColor: "var(--geek-accent)",
+                      color: "var(--geek-accent)",
+                      background: "rgba(255,255,255,0.92)",
+                    }}
+                  >
+                    <span className="block text-lg font-bold tracking-wide">
+                      challenge complete!
+                    </span>
+                    <span className="block text-[10px] tracking-[0.14em] opacity-70">
+                      (with WAND)
+                    </span>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <AnimatePresence>
             {cart && (
               <motion.div
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="rounded-lg border p-3 font-mono text-xs"
+                initial={{ opacity: 0, y: 6, scale: 0.92 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 380, damping: 22 }}
+                className="relative flex items-center gap-3 overflow-hidden rounded-lg border p-3 font-mono text-xs"
                 style={{
                   borderColor: cart === "crystal" ? "var(--geek-accent)" : "var(--geek-line)",
+                  background: cart === "crystal" ? "color-mix(in srgb, var(--geek-accent) 10%, transparent)" : undefined,
                   color: cart === "crystal" ? "var(--geek-accent)" : undefined,
                 }}
               >
-                {wandOn ? (
-                  <>✅ hands-free — a voice-first agent shopped correctly while your hands stayed free.</>
-                ) : (
-                  <>❌ grabbed {CART_LABEL[cart]} instead of the crystal shoes. greasy fingers strike again — try flipping WAND on.</>
+                {cart === "crystal" && (
+                  <motion.span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 0.4, 0] }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    style={{ background: "var(--geek-accent)" }}
+                  />
                 )}
+                {cart === "crystal" && (
+                  <motion.span
+                    initial={{ scale: 0, rotate: -30 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ type: "spring", stiffness: 500, damping: 12, delay: 0.15 }}
+                    className="relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-sm text-white"
+                    style={{ background: "var(--geek-accent)" }}
+                  >
+                    ✓
+                  </motion.span>
+                )}
+                <span className="relative">
+                  {wandOn ? (
+                    <>hands-free — a voice-first agent shopped correctly while your hands stayed free.</>
+                  ) : (
+                    <>❌ grabbed {CART_LABEL[cart]} instead of the crystal shoes. greasy fingers strike again.</>
+                  )}
+                </span>
               </motion.div>
+            )}
+          </AnimatePresence>
+
+          <AnimatePresence>
+            {dirty && (cart || retryCount >= 2) && (
+              <motion.button
+                initial={{ opacity: 0, y: -6, scale: 0.9 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  boxShadow: [
+                    "0 0 0 0px color-mix(in srgb, var(--geek-accent) 40%, transparent)",
+                    "0 0 0 8px color-mix(in srgb, var(--geek-accent) 0%, transparent)",
+                  ],
+                }}
+                transition={{ boxShadow: { duration: 1.4, repeat: Infinity }, default: { duration: 0.3 } }}
+                onClick={() => {
+                  setWandOn(true);
+                  start(true);
+                }}
+                className="self-center rounded-full px-5 py-2.5 font-mono text-sm font-semibold text-white"
+                style={{ background: "var(--geek-accent)" }}
+              >
+                Try WAND →
+              </motion.button>
             )}
           </AnimatePresence>
 

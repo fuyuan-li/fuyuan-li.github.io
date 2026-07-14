@@ -39,7 +39,9 @@ export default function SeenItDemo() {
   const [jumpOrder, setJumpOrder] = useState<("bread" | "mix")[]>([]);
   const [bubble, setBubble] = useState<Bubble>(null);
   const [busy, setBusy] = useState(false);
+  const [recsPulse, setRecsPulse] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const recsScrollRef = useRef<HTMLDivElement>(null);
   const timers = useRef<number[]>([]);
 
   const after = (ms: number, fn: () => void) => {
@@ -112,6 +114,7 @@ export default function SeenItDemo() {
           // let the jump land and play for a beat before recs quietly show up
           after(2500, () => {
             setJumpOrder((o) => (o.includes("bread") ? o : [...o, "bread"]));
+            pulseRecs();
           });
         });
       });
@@ -131,6 +134,7 @@ export default function SeenItDemo() {
           setBusy(false);
           after(2500, () => {
             setJumpOrder((o) => (o.includes("mix") ? o : [...o, "mix"]));
+            pulseRecs();
           });
         });
       });
@@ -143,6 +147,7 @@ export default function SeenItDemo() {
     setJumpOrder([]);
     setBubble(null);
     setBusy(false);
+    setRecsPulse(false);
     const v = videoRef.current;
     if (v) {
       v.currentTime = 0;
@@ -151,6 +156,19 @@ export default function SeenItDemo() {
   };
 
   const products = jumpOrder.flatMap((k) => (k === "bread" ? WAVE_1 : WAVE_2));
+
+  const pulseRecs = () => {
+    setRecsPulse(true);
+    after(2600, () => setRecsPulse(false));
+    // the new batch lands on the right — scroll it into view so it's
+    // obvious the list just updated, not just quietly grown off-screen
+    after(60, () => {
+      recsScrollRef.current?.scrollTo({
+        left: recsScrollRef.current.scrollWidth,
+        behavior: "smooth",
+      });
+    });
+  };
 
   return (
     <div
@@ -234,6 +252,14 @@ export default function SeenItDemo() {
       {/* query chips */}
       {started && (
         <>
+          <motion.div
+            className="flex items-center gap-1.5 self-start text-[10px] italic"
+            style={{ fontFamily: SERIF, color: "#f0bc86" }}
+            animate={{ y: [0, 3, 0] }}
+            transition={{ duration: 1, repeat: Infinity }}
+          >
+            <span aria-hidden>↓</span> try click a bubble below to simulate speaking
+          </motion.div>
           <div className="flex flex-wrap gap-2">
             <button
               onClick={askPause}
@@ -268,21 +294,51 @@ export default function SeenItDemo() {
               🎤 &quot;...jump to the rice and canola?&quot;
             </button>
           </div>
-          <p className="text-[10px] italic opacity-40" style={{ fontFamily: SERIF, color: "#cabfb1" }}>
+          <motion.p
+            className="text-[10px] italic"
+            style={{ fontFamily: SERIF, color: "#cabfb1" }}
+            animate={{ opacity: [0.4, 0.9, 0.4], color: ["#cabfb1", "#f0bc86", "#cabfb1"] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+          >
             the real thing listens to your actual voice — these buttons stand in for speech in this demo.
-          </p>
+          </motion.p>
         </>
       )}
 
       {/* recommendations — real products from the actual recording, appearing quietly */}
       <div>
-        <p
-          className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em]"
-          style={{ fontFamily: SERIF, color: "#d6b898" }}
+        <div className="mb-2 flex items-center gap-2">
+          <p
+            className="text-[11px] font-semibold uppercase tracking-[0.2em]"
+            style={{ fontFamily: SERIF, color: "#d6b898" }}
+          >
+            you may like {products.length > 0 && <span className="opacity-50">· {products.length} items</span>}
+          </p>
+          <AnimatePresence>
+            {recsPulse && (
+              <motion.span
+                initial={{ opacity: 0, x: -6 }}
+                animate={{ opacity: 1, x: [0, -4, 0] }}
+                exit={{ opacity: 0 }}
+                transition={{ x: { duration: 0.8, repeat: Infinity } }}
+                className="text-[10px] italic"
+                style={{ fontFamily: SERIF, color: "#d6b898" }}
+              >
+                ← because of your search
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </div>
+        <motion.div
+          ref={recsScrollRef}
+          className="flex gap-2.5 overflow-x-auto rounded-lg pb-1"
+          animate={
+            recsPulse
+              ? { boxShadow: "0 0 0 4px rgba(214,184,152,0.35)" }
+              : { boxShadow: "0 0 0 0px rgba(214,184,152,0)" }
+          }
+          transition={{ duration: 0.4 }}
         >
-          you may like {products.length > 0 && <span className="opacity-50">· {products.length} items</span>}
-        </p>
-        <div className="flex gap-2.5 overflow-x-auto pb-1">
           <AnimatePresence>
             {products.map((p) => (
               <motion.div
@@ -311,7 +367,7 @@ export default function SeenItDemo() {
               jump to a moment and suggested products will quietly show up here — never a popup.
             </p>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {started && (

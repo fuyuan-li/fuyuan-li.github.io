@@ -85,6 +85,34 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
     return () => window.clearTimeout(t);
   }, [openItem]);
 
+  // demos grow/shrink as their internal state advances (processing → done,
+  // keyboards opening, results appearing) — keep the panel's bottom in view
+  // as that happens instead of leaving users to scroll down manually
+  useEffect(() => {
+    if (!openItem) return;
+    const el = panelRef.current;
+    if (!el) return;
+    let raf: number | null = null;
+    const ro = new ResizeObserver(() => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const rect = el.getBoundingClientRect();
+        const overflow = rect.bottom - window.innerHeight;
+        if (overflow > 8) {
+          window.scrollBy({
+            top: Math.min(overflow + 24, window.innerHeight * 0.6),
+            behavior: "smooth",
+          });
+        }
+      });
+    });
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [openItem]);
+
   const wrapTimerRef = useRef<number | null>(null);
   // true while we're driving the scroll ourselves (dot/card click) — a free
   // drag by the user should close whatever demo panel is open, since we

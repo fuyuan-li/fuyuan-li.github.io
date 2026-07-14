@@ -17,7 +17,17 @@ export default function PaperBookDemo() {
   const [stage, setStage] = useState<Stage>("idle");
   const [stepIndex, setStepIndex] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isOverDropzone, setIsOverDropzone] = useState(false);
   const timers = useRef<number[]>([]);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
+
+  const checkOverDropzone = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    const rect = dropZoneRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const p = "touches" in event && event.touches.length ? event.touches[0] : (event as MouseEvent);
+    const over = p.clientX >= rect.left && p.clientX <= rect.right && p.clientY >= rect.top && p.clientY <= rect.bottom;
+    setIsOverDropzone((prev) => (prev === over ? prev : over));
+  };
 
   const runPipeline = () => {
     if (stage !== "idle") return;
@@ -69,8 +79,10 @@ export default function PaperBookDemo() {
                     }
               }
               onDragStart={() => setIsDragging(true)}
+              onDrag={(e) => checkOverDropzone(e)}
               onDragEnd={(_, info) => {
                 setIsDragging(false);
+                setIsOverDropzone(false);
                 if (info.offset.x > 60 || info.offset.y > 30) runPipeline();
               }}
               whileDrag={{ scale: 1.08, cursor: "grabbing", zIndex: 50 }}
@@ -122,10 +134,30 @@ export default function PaperBookDemo() {
 
         {stage === "idle" && (
           <div className="flex flex-1 items-center justify-center">
-            <span className="font-mono text-xs opacity-55">
-              <span style={{ color: "var(--geek-accent)" }}>←</span> drag the
-              paper down <span style={{ color: "var(--geek-accent)" }}>↓</span>
-            </span>
+            <motion.svg
+              viewBox="0 0 120 110"
+              className="h-24 w-28"
+              style={{ color: "var(--geek-accent)", transform: "scaleX(-1)" }}
+              aria-hidden
+              animate={{ opacity: [0.45, 1, 0.45] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <path
+                d="M100 14 C58 14 34 18 30 46 C27 66 30 78 30 84"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={5}
+                strokeLinecap="round"
+              />
+              <path
+                d="M18 70 L30 86 L42 70"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </motion.svg>
           </div>
         )}
 
@@ -163,25 +195,34 @@ export default function PaperBookDemo() {
         }}
       >
         {stage !== "done" && (
-          <div
+          <motion.div
+            ref={dropZoneRef}
             className="flex h-full w-full flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed text-center"
-            style={{
-              borderColor: "color-mix(in srgb, var(--geek-accent) 45%, transparent)",
-              background: "color-mix(in srgb, var(--geek-accent) 8%, transparent)",
+            animate={{
+              scale: isOverDropzone ? 1.03 : 1,
+              borderColor: isOverDropzone
+                ? "var(--geek-accent)"
+                : "color-mix(in srgb, var(--geek-accent) 45%, transparent)",
+              background: isOverDropzone
+                ? "color-mix(in srgb, var(--geek-accent) 20%, transparent)"
+                : "color-mix(in srgb, var(--geek-accent) 8%, transparent)",
+              boxShadow: isOverDropzone
+                ? "0 0 0 8px color-mix(in srgb, var(--geek-accent) 22%, transparent)"
+                : "0 0 0 0px transparent",
             }}
+            transition={{ duration: 0.18 }}
           >
             <span
               className="font-mono text-lg font-semibold tracking-wide sm:text-xl"
               style={{ color: "var(--geek-accent)" }}
             >
-              try it here
+              {isOverDropzone
+                ? "release to drop ↓"
+                : stage === "processing"
+                  ? "generating your explainer…"
+                  : "Drag above paper here"}
             </span>
-            <span className="font-mono text-xs opacity-50">
-              {stage === "processing"
-                ? "generating your explainer…"
-                : "drop the paper above into this zone"}
-            </span>
-          </div>
+          </motion.div>
         )}
 
         <AnimatePresence>

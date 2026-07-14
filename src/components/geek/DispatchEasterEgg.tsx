@@ -113,7 +113,20 @@ export default function DispatchEasterEgg() {
                     background: "#111418",
                   }}
                 >
-                  <span className="flex items-center gap-2.5">
+                  <AnimatePresence>
+                    {status === "done" && (
+                      <motion.span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-0"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: [0, 0.4, 0] }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.7, ease: "easeOut" }}
+                        style={{ background: task.color }}
+                      />
+                    )}
+                  </AnimatePresence>
+                  <span className="relative flex items-center gap-2.5">
                     <span
                       className="h-2 w-2 shrink-0 rounded-full"
                       style={{
@@ -131,8 +144,36 @@ export default function DispatchEasterEgg() {
                     >
                       {task.label}
                     </span>
-                    <span className="ml-auto font-mono text-[9px] uppercase tracking-[0.12em] text-[#4a5568]">
-                      {status === "idle" ? "run" : status === "running" ? "working…" : "done ✓"}
+                    <span className="ml-auto flex items-center">
+                      <AnimatePresence mode="wait">
+                        {status === "done" ? (
+                          <motion.span
+                            key="done"
+                            initial={{ scale: 0, rotate: -25, opacity: 0 }}
+                            animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                            transition={{ type: "spring", stiffness: 500, damping: 14 }}
+                            className="flex items-center gap-1.5 font-mono text-[9px] font-bold uppercase tracking-[0.12em]"
+                            style={{ color: "#39d353" }}
+                          >
+                            <span
+                              className="flex h-4 w-4 items-center justify-center rounded-full text-[10px] leading-none text-black"
+                              style={{ background: "#39d353" }}
+                            >
+                              ✓
+                            </span>
+                            done
+                          </motion.span>
+                        ) : (
+                          <motion.span
+                            key={status}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#4a5568]"
+                          >
+                            {status === "idle" ? "run" : "working…"}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
                     </span>
                   </span>
                   <span className="mt-2 block font-mono text-[11px] leading-[1.55] text-[#c8d0dc]">

@@ -155,8 +155,18 @@ export default function InterviewCoachDemo() {
   const [settledCount, setSettledCount] = useState(0);
   const [revealed, setRevealed] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [isOverDropzone, setIsOverDropzone] = useState(false);
   const timers = useRef<number[]>([]);
   const charInterval = useRef<number | null>(null);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
+
+  const checkOverDropzone = (event: MouseEvent | TouchEvent | PointerEvent) => {
+    const rect = dropZoneRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const p = "touches" in event && event.touches.length ? event.touches[0] : (event as MouseEvent);
+    const over = p.clientX >= rect.left && p.clientX <= rect.right && p.clientY >= rect.top && p.clientY <= rect.bottom;
+    setIsOverDropzone((prev) => (prev === over ? prev : over));
+  };
 
   const after = (ms: number, fn: () => void) => {
     const t = window.setTimeout(fn, ms);
@@ -244,8 +254,10 @@ export default function InterviewCoachDemo() {
                   }
             }
             onDragStart={() => setIsDragging(true)}
+            onDrag={(e) => checkOverDropzone(e)}
             onDragEnd={(_, info) => {
               setIsDragging(false);
+              setIsOverDropzone(false);
               if (info.offset.x > 60 || info.offset.y > 30) runProcessing();
             }}
             whileDrag={{ scale: 1.08, cursor: "grabbing", zIndex: 50 }}
@@ -280,16 +292,26 @@ export default function InterviewCoachDemo() {
               <span className="h-[3px] w-3/5 rounded-full bg-current" />
             </span>
           </motion.div>
-          <div
+          <motion.div
+            ref={dropZoneRef}
             className="flex h-32 flex-1 items-center justify-center rounded-lg border-2 border-dashed text-center font-mono text-xs"
-            style={{
-              borderColor: "color-mix(in srgb, var(--geek-accent) 40%, transparent)",
-              background: "color-mix(in srgb, var(--geek-accent) 6%, transparent)",
-              color: "var(--geek-accent)",
+            animate={{
+              scale: isOverDropzone ? 1.03 : 1,
+              borderColor: isOverDropzone
+                ? "var(--geek-accent)"
+                : "color-mix(in srgb, var(--geek-accent) 40%, transparent)",
+              background: isOverDropzone
+                ? "color-mix(in srgb, var(--geek-accent) 20%, transparent)"
+                : "color-mix(in srgb, var(--geek-accent) 6%, transparent)",
+              boxShadow: isOverDropzone
+                ? "0 0 0 8px color-mix(in srgb, var(--geek-accent) 22%, transparent)"
+                : "0 0 0 0px transparent",
             }}
+            transition={{ duration: 0.18 }}
+            style={{ color: "var(--geek-accent)" }}
           >
-            ← drop your resume here
-          </div>
+            {isOverDropzone ? "release to drop ↓" : "← drop your resume here"}
+          </motion.div>
         </div>
       )}
 
