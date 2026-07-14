@@ -43,7 +43,7 @@ function ProjectTip({
   );
 }
 
-const ITEMS: CoverItem[] = [
+export const ITEMS: CoverItem[] = [
   {
     id: "paperbook",
     icon: "🎬",
@@ -70,7 +70,7 @@ const ITEMS: CoverItem[] = [
     ),
     highlights: [
       "Core idea: map the paper onto a familiar everyday scene before explaining any of it",
-      <>
+      <span key="production-app">
         Production app:{" "}
         <a
           href="https://the-paper-book.vercel.app/"
@@ -80,8 +80,8 @@ const ITEMS: CoverItem[] = [
         >
           the-paper-book.vercel.app
         </a>
-      </>,
-      <>
+      </span>,
+      <span key="related-publication">
         Related publication:{" "}
         <a
           href="https://openreview.net/forum?id=ADegFYAzfR"
@@ -94,7 +94,7 @@ const ITEMS: CoverItem[] = [
           Conference on Multimedia 2026, Demo &amp; Video Track (Under
           Review)
         </a>
-      </>,
+      </span>,
     ],
     accent: PROJECT_COLORS.paperbook,
     demo: <PaperBookDemo />,
@@ -124,7 +124,7 @@ const ITEMS: CoverItem[] = [
     highlights: [
       "A hands-free, voice-first live agent that sees your screen and acts in real time as you speak and point — no typing, no mouse.",
       "Designed for seniors, people with limited abilities, or anyone in a hands-busy moment — cooking, eating, holding a puppy 🐶",
-      <>
+      <span key="devpost-winner">
         Winner of Best Multimodal Integration &amp; User Experience —{" "}
         <a
           href="https://devpost.com/software/wand-a-live-agent-that-sees-browses-and-clicks-with-you"
@@ -134,8 +134,8 @@ const ITEMS: CoverItem[] = [
         >
           devpost.com/software/wand
         </a>
-      </>,
-      <>
+      </span>,
+      <span key="how-i-built-it">
         How I built it:{" "}
         <a
           href="https://dev.to/lifuyuan/building-wand-a-voice-hand-pointer-live-agent-with-google-adk-and-gemini-live-2fp7"
@@ -145,7 +145,7 @@ const ITEMS: CoverItem[] = [
         >
           dev.to/lifuyuan/building-wand
         </a>
-      </>,
+      </span>,
     ],
     accent: PROJECT_COLORS.wand,
     demo: <WandDemo />,
@@ -171,7 +171,7 @@ const ITEMS: CoverItem[] = [
       'In-video semantic search: “Go back to where he loosens the bolt” — jumps straight to the moment.',
       'Voice control: “Pause,” “rewind,” or, technically, “tell me a joke.”',
       "Search and voice interactions double as recommendation signals — quietly, without interrupting the video.",
-      <>
+      <span key="live-app">
         Live app:{" "}
         <a
           href="https://youtube-copilot-729166048428.us-central1.run.app/"
@@ -181,7 +181,7 @@ const ITEMS: CoverItem[] = [
         >
           youtube-copilot-729166048428.us-central1.run.app
         </a>
-      </>,
+      </span>,
     ],
     accent: PROJECT_COLORS.seenit,
     demo: <SeenItDemo />,
@@ -216,7 +216,7 @@ const ITEMS: CoverItem[] = [
     highlights: [
       "Reads your CV and asks questions grounded in your actual experience.",
       "A live, recorded session for replay, scoring, analysis, and targeted improvement areas.",
-      <>
+      <span key="available-at">
         Available at:{" "}
         <a
           href="https://cvmock.com/"
@@ -226,7 +226,7 @@ const ITEMS: CoverItem[] = [
         >
           cvmock.com
         </a>
-      </>,
+      </span>,
     ],
     accent: PROJECT_COLORS.interview,
     demo: <InterviewCoachDemo />,

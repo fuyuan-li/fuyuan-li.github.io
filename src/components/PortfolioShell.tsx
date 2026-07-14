@@ -8,6 +8,7 @@ import ModeToggle from "@/components/shared/ModeToggle";
 import TransitionOverlay from "@/components/shared/TransitionOverlay";
 import RobotSweepOverlay from "@/components/shared/RobotSweepOverlay";
 import SweepItem from "@/components/shared/SweepItem";
+import ContactIcons from "@/components/shared/ContactIcons";
 import GeekView from "@/components/geek/GeekView";
 import RockView from "@/components/rock/RockView";
 
@@ -38,15 +39,18 @@ function Shell() {
       <div className="mx-auto flex max-w-3xl flex-col gap-10 px-5 py-10 sm:px-8 sm:py-14">
         <div className="flex items-center justify-between">
           <SweepItem at={0.7}>
-            <span
-              className={
-                isRock
-                  ? "font-display text-2xl tracking-wide"
-                  : "font-mono text-sm opacity-70"
-              }
-            >
-              {isRock ? "F.LI" : "fuyuan_li.io"}
-            </span>
+            <div className="flex flex-col gap-1.5">
+              <span
+                className={
+                  isRock
+                    ? "font-display text-2xl tracking-wide"
+                    : "font-mono text-sm opacity-70"
+                }
+              >
+                {isRock ? "F.LI" : "fuyuan_li.io"}
+              </span>
+              <ContactIcons theme={isRock ? "rock" : "geek"} />
+            </div>
           </SweepItem>
           <motion.div
             animate={{

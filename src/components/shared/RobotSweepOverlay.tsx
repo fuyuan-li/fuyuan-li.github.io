@@ -32,23 +32,15 @@ const Vacuum = memo(function Vacuum() {
       className="fixed z-[92] h-14 w-14"
       initial={{ left: "-7vw", top: "86vh", rotate: 0, opacity: 1 }}
       animate={{
-        left: [
-          "-7vw",
-          "78vw",
-          "5vw",
-          "78vw",
-          "5vw",
-          "-10vw",
-          "105vw",
-          "calc(100vw - 172px)",
-        ],
-        top: ["86vh", "86vh", "67vh", "48vh", "29vh", "10vh", "58px", "58px"],
-        rotate: [0, 10, 180, 190, 360, 350, 180, 180],
-        opacity: [1, 1, 1, 1, 1, 1, 1, 1],
+        // 3 legs: bottom-left → right-mid → top-left → toggle (top-right)
+        left: ["-7vw", "78vw", "5vw", "calc(100vw - 172px)"],
+        top: ["86vh", "48vh", "10vh", "58px"],
+        rotate: [0, 190, 340, 180],
+        opacity: [1, 1, 1, 1],
       }}
       transition={{
-        duration: 4.2,
-        times: [0, 0.14, 0.3, 0.46, 0.62, 0.73, 0.78, 1],
+        duration: 2.4,
+        times: [0, 0.36, 0.7, 1],
         ease: "linear",
       }}
     >

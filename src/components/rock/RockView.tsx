@@ -16,6 +16,9 @@ export default function RockView() {
           same person, different room. still building tools — just for the
           band this time.
         </p>
+        <p className="max-w-xl text-sm opacity-70">
+          available for gigs, sessions, writing &amp; production — hit me up.
+        </p>
       </header>
 
       <ProjectCard eyebrow="live" title="on stage" tagline="a few seconds from a few shows." theme="rock">
