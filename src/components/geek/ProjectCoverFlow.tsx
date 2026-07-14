@@ -17,9 +17,14 @@ export interface CoverItem {
   demo: ReactNode;
 }
 
-const CARD_WIDTH = 240;
-const GAP = 24;
-const STEP = CARD_WIDTH + GAP;
+const DESKTOP_CARD_WIDTH = 240;
+const DESKTOP_GAP = 24;
+// narrower + tighter on small screens so neighboring cards peek in further —
+// on a phone-width viewport the old 240/24 left almost no room to notice
+// there were more cards at all
+const MOBILE_CARD_WIDTH = 188;
+const MOBILE_GAP = 14;
+const MOBILE_BREAKPOINT = 640;
 
 export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
   const n = items.length;
@@ -34,8 +39,26 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
   const [centerIndex, setCenterIndex] = useState(0); // real index 0..n-1, for the dots
   const [openId, setOpenId] = useState<string | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const [dims, setDims] = useState({ cardWidth: DESKTOP_CARD_WIDTH, gap: DESKTOP_GAP });
+
+  const CARD_WIDTH = dims.cardWidth;
+  const GAP = dims.gap;
+  const STEP = CARD_WIDTH + GAP;
 
   const openItem = items.find((i) => i.id === openId) ?? null;
+
+  useEffect(() => {
+    const update = () => {
+      const mobile = window.innerWidth < MOBILE_BREAKPOINT;
+      setDims({
+        cardWidth: mobile ? MOBILE_CARD_WIDTH : DESKTOP_CARD_WIDTH,
+        gap: mobile ? MOBILE_GAP : DESKTOP_GAP,
+      });
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   const applyTransforms = () => {
     const el = trackRef.current;
@@ -48,7 +71,7 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
       const abs = Math.abs(offset);
       const isCenter = li === nearestLi;
       const scale = Math.max(0.55, 1 - abs * 0.19);
-      const rotateY = Math.max(-42, Math.min(42, offset * -30));
+      const rotateY = Math.max(-52, Math.min(52, offset * -38));
       const opacity = Math.max(0.15, 1 - abs * 0.4);
       card.style.transform = `scale(${scale}) rotateY(${rotateY}deg)`;
       card.style.opacity = String(isCenter ? 1 : opacity);
@@ -62,20 +85,21 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
     setCenterIndex((prev) => (prev === realIndex ? prev : realIndex));
   };
 
-  // start centered in the middle copy
+  // start centered in the middle copy — also re-centers (on the same real
+  // card) whenever the responsive card size changes, since STEP shifts too
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
-    el.scrollLeft = n * STEP;
+    el.scrollLeft = (n + centerIndex) * STEP;
     applyTransforms();
     // fonts / layout can settle a frame later — reapply once more
     const t = window.setTimeout(() => {
-      el.scrollLeft = n * STEP;
+      el.scrollLeft = (n + centerIndex) * STEP;
       applyTransforms();
     }, 50);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [n]);
+  }, [n, dims.cardWidth, dims.gap]);
 
   useEffect(() => {
     if (!openItem) return;
@@ -194,9 +218,14 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
     return Math.round(el.scrollLeft / STEP);
   };
 
+  // fade the peeking neighbor cards toward the viewport edge instead of
+  // hard-clipping them — the classic "there's more here" carousel cue
+  const edgeFadeMask =
+    "linear-gradient(to right, transparent 0, black 28px, black calc(100% - 28px), transparent 100%)";
+
   return (
     <div className="flex flex-col gap-8">
-      <div style={{ perspective: "1600px" }}>
+      <div style={{ perspective: "1100px" }}>
         <div
           ref={trackRef}
           onScroll={handleScroll}
@@ -205,6 +234,8 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
             scrollSnapType: "x mandatory",
             paddingInline: `calc(50% - ${CARD_WIDTH / 2}px)`,
             gap: `${GAP}px`,
+            maskImage: edgeFadeMask,
+            WebkitMaskImage: edgeFadeMask,
           }}
         >
           {loop.map((item, li) => (
@@ -224,8 +255,9 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
                   setOpenId((o) => (o ? item.id : o));
                 }
               }}
-              className="relative flex h-80 w-60 shrink-0 flex-col items-center justify-center gap-3 overflow-hidden rounded-3xl border text-center"
+              className="relative flex h-80 shrink-0 flex-col items-center justify-center gap-3 overflow-hidden rounded-3xl border text-center"
               style={{
+                width: CARD_WIDTH,
                 scrollSnapAlign: "center",
                 borderColor: "var(--geek-line)",
                 background: `linear-gradient(160deg, ${item.accent}22, var(--geek-bg-raised))`,
