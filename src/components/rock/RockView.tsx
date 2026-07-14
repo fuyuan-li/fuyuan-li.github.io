@@ -25,7 +25,7 @@ export default function RockView() {
       <ProjectCard
         eyebrow="stagev1"
         title="setlist, swiped"
-        tagline="I mostly hit drums. Occasionally, I hit a keyboard — usually when the band needs something. StageV1 turns rehearsal song-picking from a 40-message group chat into a Tinder-ish swipe: pass, waitlist, or join. Everyone gets a vote; the group chat gets the night off."
+        tagline="I mostly hit drums. Occasionally, I hit a keyboard too — the computer kind. Usually when the band needs something. StageV1 turns rehearsal song-picking from a 40-message group chat into a Tinder-ish swipe: pass, waitlist, or join. Everyone gets a vote; the group chat gets the night off."
         actions={
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em]">
             <span

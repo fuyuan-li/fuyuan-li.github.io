@@ -90,6 +90,17 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
   // drag by the user should close whatever demo panel is open, since we
   // don't know where they're headed until the gesture ends
   const programmaticScrollRef = useRef(false);
+  const programmaticReleaseTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (wrapTimerRef.current) window.clearTimeout(wrapTimerRef.current);
+      if (programmaticReleaseTimerRef.current) {
+        window.clearTimeout(programmaticReleaseTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleScroll = () => {
     const el = trackRef.current;
@@ -110,21 +121,43 @@ export default function ProjectCoverFlow({ items }: { items: CoverItem[] }) {
     wrapTimerRef.current = window.setTimeout(() => {
       const cur = trackRef.current;
       if (!cur) return;
+      let wrapped = false;
       if (cur.scrollLeft < n * STEP * 0.5) {
         cur.scrollLeft += n * STEP;
+        wrapped = true;
       } else if (cur.scrollLeft > n * STEP * 1.5) {
         cur.scrollLeft -= n * STEP;
+        wrapped = true;
       }
       applyTransforms();
+
+      // A loop correction emits one more scroll event. Keep the guard alive
+      // for that event, then release it after the corrected position settles.
+      if (programmaticScrollRef.current && !wrapped) {
+        programmaticScrollRef.current = false;
+        if (programmaticReleaseTimerRef.current) {
+          window.clearTimeout(programmaticReleaseTimerRef.current);
+          programmaticReleaseTimerRef.current = null;
+        }
+      }
     }, 120);
   };
 
   const scrollToLoopIndex = (loopIndex: number) => {
+    const track = trackRef.current;
+    if (!track) return;
+
     programmaticScrollRef.current = true;
-    trackRef.current?.scrollTo({ left: loopIndex * STEP, behavior: "smooth" });
-    window.setTimeout(() => {
+    if (programmaticReleaseTimerRef.current) {
+      window.clearTimeout(programmaticReleaseTimerRef.current);
+    }
+    // Fallback for clicking the already-centered dot, which produces no
+    // scroll event and therefore has no natural "settled" callback.
+    programmaticReleaseTimerRef.current = window.setTimeout(() => {
       programmaticScrollRef.current = false;
-    }, 500);
+      programmaticReleaseTimerRef.current = null;
+    }, 1200);
+    track.scrollTo({ left: loopIndex * STEP, behavior: "smooth" });
   };
 
   const currentNearestLi = () => {

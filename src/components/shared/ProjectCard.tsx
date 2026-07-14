@@ -58,7 +58,11 @@ export default function ProjectCard({
         >
           {title}
         </h3>
-        <div className="mt-3 max-w-prose text-base leading-[1.55] opacity-70">
+        <div
+          className={`mt-3 max-w-prose text-base leading-[1.55] ${
+            isRock ? "opacity-70" : ""
+          }`}
+        >
           {tagline}
         </div>
         {highlights && highlights.length > 0 && (
