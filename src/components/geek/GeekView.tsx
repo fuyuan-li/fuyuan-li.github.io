@@ -5,43 +5,8 @@ import SeenItDemo from "./SeenItDemo";
 import DispatchEasterEgg from "./DispatchEasterEgg";
 import InterviewCoachDemo from "./InterviewCoachDemo";
 import SweepItem from "@/components/shared/SweepItem";
+import ProjectTip from "@/components/shared/ProjectTip";
 import { PROJECT_COLORS } from "@/lib/project-colors";
-import type { ReactNode } from "react";
-
-function ProjectTip({
-  accent,
-  children,
-}: {
-  accent: string;
-  children: ReactNode;
-}) {
-  return (
-    <aside
-      className="rounded-xl border px-4 py-3.5 sm:px-5 sm:py-4"
-      style={{
-        borderColor: `color-mix(in srgb, ${accent} 30%, var(--geek-line))`,
-        background: `color-mix(in srgb, ${accent} 7%, var(--geek-bg-raised))`,
-      }}
-    >
-      <div
-        className="mb-2 flex items-center gap-2 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
-        style={{ color: accent }}
-      >
-        <span
-          className="flex h-6 w-6 items-center justify-center rounded-full text-sm"
-          style={{ background: `color-mix(in srgb, ${accent} 16%, transparent)` }}
-          aria-hidden
-        >
-          💡
-        </span>
-        why this exists
-      </div>
-      <div className="flex flex-col gap-2 text-[15px] leading-[1.65] opacity-80">
-        {children}
-      </div>
-    </aside>
-  );
-}
 
 export const ITEMS: CoverItem[] = [
   {
